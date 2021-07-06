@@ -96,6 +96,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    // 解析配置
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
@@ -103,13 +104,19 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 解析mybatis-config.xml的各种标签
+        //解析properties配置
       propertiesElement(root.evalNode("properties"));
+//      解析settings属性,并转换为properties对象
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
+//      配置typeAliases
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
+//      配置plugins
       objectFactoryElement(root.evalNode("objectFactory"));
+
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
       settingsElement(settings);
@@ -218,10 +225,16 @@ public class XMLConfigBuilder extends BaseBuilder {
       configuration.setReflectorFactory(factory);
     }
   }
+//  <properties resource="jdbc.properties">
+//    <property name="jdbc.username" value="coolblog"/>
+//    <property name="hello" value="world"/>
+//  </properties>
 
   private void propertiesElement(XNode context) throws Exception {
     if (context != null) {
+//      解析 propertis 的子节点，并将这些节点内容转换为属性对象 Properties
       Properties defaults = context.getChildrenAsProperties();
+      // 获取 propertis 节点中的 resource 和 url 属性值
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
       if (resource != null && url != null) {

@@ -33,6 +33,7 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(Reader reader) {
+    //调用重载方法
     return build(reader, null, null);
   }
 
@@ -46,6 +47,7 @@ public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
     try {
+      // 解析mybatis-config.xml配置文件
       XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
       return build(parser.parse());
     } catch (Exception e) {
